@@ -1,9 +1,14 @@
+import HomeCard from "@/components/home/home-card";
+import HomeSearch from "@/components/home/home-search";
+import SetStatus from "@/components/home/set-status";
 
 
 export default function Home() {
   return (
     <div>
-      <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-bold">Hello</h1>
+      <HomeSearch/>
+      <HomeCard/>
+      <SetStatus/>
     </div>
   );
 }

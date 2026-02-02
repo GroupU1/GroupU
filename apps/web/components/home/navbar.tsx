@@ -4,7 +4,7 @@ import { Home, MessageCircle, UserRound, Waypoints } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import Link from 'next/link';
 
-export function Navbar() {
+export default function Navbar() {
     return (
         <div className="fixed top-0 left-0 flex flex-col text-xs font-medium gap-y-4 m-6 justify-start items-center">
             <Avatar size="lg" className='mb-4'>
