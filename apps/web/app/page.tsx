@@ -1,14 +1,7 @@
-import HomeCard from "@/components/home/home-card";
-import HomeSearch from "@/components/home/home-search";
-import SetStatus from "@/components/home/set-status";
-
+import HomePage from "@/components/home/home-page";
+import LoginPage from "@/components/login/login";
+import { UserButton } from "@clerk/nextjs";
 
 export default function Home() {
-  return (
-    <div>
-      <HomeSearch/>
-      <HomeCard/>
-      <SetStatus/>
-    </div>
-  );
+  return <LoginPage authContent={<HomePage />} />;
 }

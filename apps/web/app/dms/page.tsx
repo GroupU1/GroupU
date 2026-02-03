@@ -6,6 +6,7 @@ import DmMessageHeader from "@/components/dms/dm-message-header";
 import DmMessageInput from "@/components/dms/dm-message-input";
 import DmMessages from "@/components/dms/dm-messages";
 import DmTitleDropdown from "@/components/dms/dm-title-dropdown";
+import Navbar from "@/components/home/navbar";
 import { Button } from "@/components/ui/button";
 import {
   InputGroup,
@@ -107,6 +108,7 @@ export default function Page() {
           <DmMessageInput className="w-full mx-auto" />
         </div>
       </div>
+      <Navbar/>
     </div>
   );
 }
