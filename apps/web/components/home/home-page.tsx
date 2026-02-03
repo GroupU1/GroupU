@@ -7,7 +7,7 @@ import SetStatus from "@/components/home/set-status";
 export default function HomePage() {
   return (
     <div>
-      <Navbar />
+      <Navbar/>
       <HomeSearch/>
       <HomeCard/>
       <SetStatus/>

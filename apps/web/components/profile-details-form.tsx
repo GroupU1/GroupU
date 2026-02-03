@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { UserRound, Upload, X } from "lucide-react";
+import { useMutation } from "convex/react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -29,10 +30,12 @@ import {
   InputGroupTextarea,
   InputGroupText,
 } from "@/components/ui/input-group";
+import { api } from "../../backend/convex/_generated/api";
 
 export default function ProfileDetailsForm() {
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const mutateUser = useMutation(api.users.mutateUser);
 
   React.useEffect(() => {
     return () => {
@@ -61,9 +64,31 @@ export default function ProfileDetailsForm() {
     }
   }
 
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    const readValue = (key: string) => {
+      const value = formData.get(key);
+      if (typeof value !== "string") return undefined;
+      const trimmed = value.trim();
+      return trimmed.length ? trimmed : undefined;
+    };
+
+    await mutateUser({
+      firstName: readValue("firstName"),
+      lastName: readValue("lastName"),
+      nickname: readValue("nickname"),
+      collegeYear: readValue("collegeYear"),
+      major: readValue("major"),
+      concentration: readValue("concentration"),
+      bio: readValue("bio"),
+    });
+  }
+
   return (
     <Card className="w-full max-w-2xl">
-      <form className="grid gap-6">
+      <form className="grid gap-6" onSubmit={handleSubmit}>
         <CardHeader>
           <CardTitle>Profile Details</CardTitle>
           <CardDescription>
@@ -130,6 +155,32 @@ export default function ProfileDetailsForm() {
             <FieldGroup className="gap-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field>
+                  <FieldLabel htmlFor="firstName">First name</FieldLabel>
+                  <FieldContent>
+                    <InputGroup>
+                      <InputGroupInput
+                        id="firstName"
+                        name="firstName"
+                        placeholder="e.g. William"
+                      />
+                    </InputGroup>
+                  </FieldContent>
+                </Field>
+
+                <Field>
+                  <FieldLabel htmlFor="lastName">Last name</FieldLabel>
+                  <FieldContent>
+                    <InputGroup>
+                      <InputGroupInput
+                        id="lastName"
+                        name="lastName"
+                        placeholder="e.g. Johnson"
+                      />
+                    </InputGroup>
+                  </FieldContent>
+                </Field>
+
+                <Field>
                   <FieldLabel htmlFor="nickname">Nickname</FieldLabel>
                   <FieldContent>
                     <InputGroup>
@@ -148,7 +199,7 @@ export default function ProfileDetailsForm() {
                     <InputGroup>
                       <InputGroupInput
                         id="year"
-                        name="year"
+                        name="collegeYear"
                         placeholder="e.g. 2026"
                       />
                     </InputGroup>
@@ -204,7 +255,7 @@ export default function ProfileDetailsForm() {
                   <InputGroup>
                     <InputGroupTextarea
                       id="about"
-                      name="about"
+                      name="bio"
                       placeholder="Share a few lines about your interests, projects, or goals."
                       rows={4}
                     />

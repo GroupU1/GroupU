@@ -1,5 +1,5 @@
-import { defineSchema, defineTable } from "convex/server"
-import { v } from "convex/values"
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
 
 export default defineSchema({
   users: defineTable({
@@ -11,5 +11,12 @@ export default defineSchema({
     major: v.optional(v.string()),
     concentration: v.optional(v.string()),
     bio: v.optional(v.string()),
-  }).index("by_auth", ["authId"]),c
-})
+    zoneId: v.optional(v.id("zones")),
+  })
+    .index("by_auth", ["authId"])
+    .index("by_zone", ["zoneId"]),
+  zones: defineTable({
+    name: v.string(),
+    description: v.optional(v.string()),
+  }),
+});
