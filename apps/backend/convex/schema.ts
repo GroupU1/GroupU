@@ -104,4 +104,22 @@ export default defineSchema({
     text: v.string(),
     timestamp: v.number(),
   }).index("by_activity_user", ["activityId", "userId"]),
+
+  dmChat: defineTable({
+    name: v.optional(v.string()),
+  }),
+
+  dmChatMember: defineTable({
+    chatId: v.id("dmChat"),
+    userId: v.id("users"),
+  })
+    .index("by_chat", ["chatId"])
+    .index("by_user", ["userId"]),
+
+  dm: defineTable({
+    chatId: v.id("dmChat"),
+    senderId: v.id("users"),
+    text: v.string(),
+    timestamp: v.number(),
+  }).index("by_chat_sender", ["chatId", "senderId"]),
 });
