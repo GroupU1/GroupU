@@ -1,6 +1,5 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import { act } from "react";
 
 export default defineSchema({
   users: defineTable({
@@ -106,6 +105,7 @@ export default defineSchema({
   }).index("by_activity_user", ["activityId", "userId"]),
 
   dmChat: defineTable({
+    // max 10 members
     name: v.optional(v.string()),
   }),
 
@@ -121,5 +121,8 @@ export default defineSchema({
     senderId: v.id("users"),
     text: v.string(),
     timestamp: v.number(),
-  }).index("by_chat_sender", ["chatId", "senderId"]),
+    editedAt: v.optional(v.number()),
+  })
+    .index("by_chat_sender", ["chatId", "senderId"])
+    .index("by_chat_time", ["chatId", "timestamp"]),
 });
