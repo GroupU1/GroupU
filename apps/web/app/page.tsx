@@ -3,5 +3,5 @@ import LoginPage from "@/components/login/login";
 import { UserButton } from "@clerk/nextjs";
 
 export default function Home() {
-  return <LoginPage authContent={<HomePage />} />;
+  return <LoginPage />;
 }

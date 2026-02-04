@@ -7,10 +7,10 @@ import ProfileButton from "@/components/home/profile-button";
 export default function Navbar() {
   return (
     <div className="fixed top-0 left-0 flex flex-col text-xs font-medium gap-y-4 m-6 justify-start items-center">
-      <ProfileButton/>
+      <ProfileButton />
       <div className="text-center">
         <Button asChild variant="ghost" size="icon-lg" className="p-0">
-          <Link href="/" aria-label="Home">
+          <Link href="/home" aria-label="Home">
             <Home className="size-6" />
           </Link>
         </Button>

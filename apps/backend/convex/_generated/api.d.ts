@@ -8,6 +8,9 @@
  * @module
  */
 
+import type * as banned from "../banned.js";
+import type * as friends from "../friends.js";
+import type * as statuses from "../statuses.js";
 import type * as users from "../users.js";
 
 import type {
@@ -17,6 +20,9 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  banned: typeof banned;
+  friends: typeof friends;
+  statuses: typeof statuses;
   users: typeof users;
 }>;
 

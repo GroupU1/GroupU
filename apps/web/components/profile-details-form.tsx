@@ -35,7 +35,7 @@ import { api } from "../../backend/convex/_generated/api";
 export default function ProfileDetailsForm() {
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const mutateUser = useMutation(api.users.mutateUser);
+  const upsertUser = useMutation(api.users.upsertUser);
 
   React.useEffect(() => {
     return () => {
@@ -75,7 +75,7 @@ export default function ProfileDetailsForm() {
       return trimmed.length ? trimmed : undefined;
     };
 
-    await mutateUser({
+    await upsertUser({
       firstName: readValue("firstName"),
       lastName: readValue("lastName"),
       nickname: readValue("nickname"),
