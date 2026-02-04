@@ -41,10 +41,26 @@ export const sendRequest = mutation({
 
     if (existingFrom || existingTo) return;
 
-    await ctx.db.insert("friends", {
+    const existingRequestFrom = await ctx.db
+      .query("friendRequest")
+      .withIndex("by_from", (q) =>
+        q.eq("fromUserId", currentUser._id).eq("toUserId", toUserId),
+      )
+      .first();
+
+    const existingRequestTo = await ctx.db
+      .query("friendRequest")
+      .withIndex("by_from", (q) =>
+        q.eq("fromUserId", toUserId).eq("toUserId", currentUser._id),
+      )
+      .first();
+
+    if (existingRequestFrom || existingRequestTo) return;
+
+    await ctx.db.insert("friendRequest", {
       fromUserId: currentUser._id,
       toUserId,
-      status: "pending",
+      expirationTime: Date.now() + 7 * 24 * 60 * 60 * 1000,
     });
   },
 });
@@ -65,15 +81,36 @@ export const acceptRequest = mutation({
     if (!currentUser) throw new Error("User not found");
 
     const request = await ctx.db
+      .query("friendRequest")
+      .withIndex("by_from", (q) =>
+        q.eq("fromUserId", fromUserId).eq("toUserId", currentUser._id),
+      )
+      .first();
+
+    if (!request) return;
+
+    const existingFrom = await ctx.db
       .query("friends")
       .withIndex("by_from", (q) =>
         q.eq("fromUserId", fromUserId).eq("toUserId", currentUser._id),
       )
       .first();
 
-    if (!request || request.status !== "pending") return;
+    const existingTo = await ctx.db
+      .query("friends")
+      .withIndex("by_from", (q) =>
+        q.eq("fromUserId", currentUser._id).eq("toUserId", fromUserId),
+      )
+      .first();
 
-    await ctx.db.patch(request._id, { status: "accepted" });
+    if (!existingFrom && !existingTo) {
+      await ctx.db.insert("friends", {
+        fromUserId: fromUserId,
+        toUserId: currentUser._id,
+      });
+    }
+
+    await ctx.db.delete(request._id);
   },
 });
 
@@ -93,15 +130,55 @@ export const rejectRequest = mutation({
     if (!currentUser) throw new Error("User not found");
 
     const request = await ctx.db
-      .query("friends")
+      .query("friendRequest")
       .withIndex("by_from", (q) =>
         q.eq("fromUserId", fromUserId).eq("toUserId", currentUser._id),
       )
       .first();
 
-    if (!request || request.status !== "pending") return;
+    if (!request) return;
 
     await ctx.db.delete(request._id);
+  },
+});
+
+export const outgoingFriendRequests = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_auth", (q) => q.eq("authId", identity.subject))
+      .unique();
+
+    if (!currentUser) throw new Error("User not found");
+
+    return await ctx.db
+      .query("friendRequest")
+      .withIndex("by_from", (q) => q.eq("fromUserId", currentUser._id))
+      .collect();
+  },
+});
+
+export const incomingFriendRequests = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_auth", (q) => q.eq("authId", identity.subject))
+      .unique();
+
+    if (!currentUser) throw new Error("User not found");
+
+    return await ctx.db
+      .query("friendRequest")
+      .withIndex("by_to", (q) => q.eq("toUserId", currentUser._id))
+      .collect();
   },
 });
 
@@ -120,10 +197,8 @@ export const listFriends = query({
       .collect();
 
     const accepted = [
-      ...outgoing.filter((f) => f.status === "accepted").map((f) => f.toUserId),
-      ...incoming
-        .filter((f) => f.status === "accepted")
-        .map((f) => f.fromUserId),
+      ...outgoing.map((f) => f.toUserId),
+      ...incoming.map((f) => f.fromUserId),
     ];
 
     const friends = await Promise.all(

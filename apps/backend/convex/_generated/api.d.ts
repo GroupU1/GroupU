@@ -12,6 +12,7 @@ import type * as banned from "../banned.js";
 import type * as friends from "../friends.js";
 import type * as statuses from "../statuses.js";
 import type * as users from "../users.js";
+import type * as zone from "../zone.js";
 
 import type {
   ApiFromModules,
@@ -24,6 +25,7 @@ declare const fullApi: ApiFromModules<{
   friends: typeof friends;
   statuses: typeof statuses;
   users: typeof users;
+  zone: typeof zone;
 }>;
 
 /**

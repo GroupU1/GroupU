@@ -30,7 +30,7 @@ import {
   InputGroupTextarea,
   InputGroupText,
 } from "@/components/ui/input-group";
-import { api } from "../../backend/convex/_generated/api";
+import { api } from "../../../backend/convex/_generated/api";
 
 export default function ProfileDetailsForm() {
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);

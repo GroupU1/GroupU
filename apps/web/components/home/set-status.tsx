@@ -118,7 +118,7 @@ export default function SetStatus() {
                     </SelectContent>
                   </Select>
                   <FieldDescription>
-                    Status will expire automatically.
+                    Statuses will expire automatically.
                   </FieldDescription>
                 </Field>
                 {error ? (
