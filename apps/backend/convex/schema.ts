@@ -17,21 +17,7 @@ export default defineSchema({
       v.literal("friends"),
       v.literal("private"),
     ),
-    zoneId: v.optional(v.id("zones")),
-  })
-    .index("by_auth", ["authId"])
-    .index("by_zone", ["zoneId"]),
-
-  zones: defineTable({
-    name: v.string(),
-    description: v.string(),
-    polygon: v.array(
-      v.object({
-        lat: v.number(),
-        lng: v.number(),
-      }),
-    ), //consider list of circles or stadiums for collision performance
-  }),
+  }).index("by_auth", ["authId"]),
 
   statuses: defineTable({
     userId: v.id("users"),
@@ -59,17 +45,19 @@ export default defineSchema({
     bannedUserId: v.id("users"),
   }).index("by_from_banned", ["fromUserId", "bannedUserId"]),
 
+  restrictedUser: defineTable({
+    fromUserId: v.id("users"),
+    restrictedUserId: v.id("users"),
+  }).index("by_from_restricted", ["fromUserId", "restrictedUserId"]),
+
   activity: defineTable({
     creatorId: v.id("users"),
     title: v.string(),
     description: v.optional(v.string()),
-    location: v.union(
-      v.id("zones"),
-      v.object({
-        lat: v.number(),
-        lng: v.number(),
-      }),
-    ),
+    location: v.object({
+      lat: v.number(),
+      lng: v.number(),
+    }),
     locationDetails: v.optional(v.string()),
     time: v.optional(v.number()), //exact time or in 20 minutes??
     maxSize: v.number(),
