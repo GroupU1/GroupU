@@ -17,6 +17,12 @@ export default defineSchema({
       v.literal("friends"),
       v.literal("private"),
     ),
+    location: v.optional(
+      v.object({
+        lat: v.number(),
+        lng: v.number(),
+      }),
+    ),
   }).index("by_auth", ["authId"]),
 
   statuses: defineTable({
@@ -69,7 +75,9 @@ export default defineSchema({
     // delete related entries on activity deletion
     activityId: v.id("activity"),
     userId: v.id("users"),
-  }).index("by_activity_user", ["activityId", "userId"]),
+  })
+    .index("by_activity_user", ["activityId", "userId"])
+    .index("by_user", ["userId"]),
 
   activityRequest: defineTable({
     // delete related entries on activity deletion
@@ -82,7 +90,9 @@ export default defineSchema({
     activityId: v.id("activity"),
     fromUserId: v.id("users"),
     toUserId: v.id("users"),
-  }).index("by_activity_to", ["activityId", "toUserId"]),
+  })
+    .index("by_activity_to", ["activityId", "toUserId"])
+    .index("by_to", ["toUserId"]),
 
   activityMessage: defineTable({
     // delete related entries on activity deletion
@@ -90,7 +100,12 @@ export default defineSchema({
     userId: v.id("users"),
     text: v.string(),
     timestamp: v.number(),
-  }).index("by_activity_user", ["activityId", "userId"]),
+    editedAt: v.optional(v.number()),
+  })
+    .index("by_activity_user", ["activityId", "userId"])
+    .index("by_activity_time", ["activityId", "timestamp"]),
+
+  //possibly add activityDeniedUser table
 
   dmChat: defineTable({
     // max 10 members

@@ -8,13 +8,14 @@
  * @module
  */
 
+import type * as activity from "../activity.js";
 import type * as banned from "../banned.js";
 import type * as dms from "../dms.js";
 import type * as friends from "../friends.js";
 import type * as ratelimiter from "../ratelimiter.js";
+import type * as restrictedUser from "../restrictedUser.js";
 import type * as statuses from "../statuses.js";
 import type * as users from "../users.js";
-import type * as zone from "../zone.js";
 
 import type {
   ApiFromModules,
@@ -23,13 +24,14 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  activity: typeof activity;
   banned: typeof banned;
   dms: typeof dms;
   friends: typeof friends;
   ratelimiter: typeof ratelimiter;
+  restrictedUser: typeof restrictedUser;
   statuses: typeof statuses;
   users: typeof users;
-  zone: typeof zone;
 }>;
 
 /**

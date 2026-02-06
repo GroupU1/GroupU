@@ -90,7 +90,11 @@ export const updateVisibility = mutation({
 
     if (!existing) throw new Error("User not found");
 
-    await ctx.db.patch(existing._id, { visibility });
+    await ctx.db.patch(existing._id, {
+      visibility,
+      ...(visibility === "private" ? { location: undefined } : {}),
+    });
+
     return existing._id;
   },
 });
