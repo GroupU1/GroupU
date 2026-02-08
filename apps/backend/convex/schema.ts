@@ -3,6 +3,7 @@ import { v } from "convex/values";
 
 export default defineSchema({
   users: defineTable({
+    //add pronouns, hobbies, profile picture url
     authId: v.string(),
     firstName: v.optional(v.string()),
     lastName: v.optional(v.string()),
@@ -66,7 +67,7 @@ export default defineSchema({
     }),
     locationDetails: v.optional(v.string()),
     time: v.optional(v.number()), //exact time or in 20 minutes??
-    maxSize: v.number(),
+    maxSize: v.optional(v.number()),
     byApproval: v.boolean(),
     expirationTime: v.number(),
   }),

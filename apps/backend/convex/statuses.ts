@@ -1,4 +1,4 @@
-import { mutation, internalMutation } from "./_generated/server";
+import { mutation, internalMutation, query } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { v } from "convex/values";
 
@@ -50,5 +50,17 @@ export const expireStatus = internalMutation({
     if (status.expirationTime <= Date.now()) {
       await ctx.db.delete(statusId);
     }
+  },
+});
+
+export const getStatus = query({
+  args: {
+    userId: v.id("users"),
+  },
+  handler: async (ctx, { userId }) => {
+    return await ctx.db
+      .query("statuses")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .unique();
   },
 });

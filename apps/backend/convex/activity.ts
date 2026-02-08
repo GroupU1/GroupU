@@ -1,5 +1,46 @@
-import { mutation, query } from "./_generated/server";
+import {
+  internalMutation,
+  mutation,
+  query,
+  MutationCtx,
+} from "./_generated/server";
+import { internal } from "./_generated/api";
 import { v } from "convex/values";
+import { Id } from "./_generated/dataModel";
+
+const deleteActivityRecords = async (
+  ctx: MutationCtx,
+  activityId: Id<"activity">,
+) => {
+  const members = await ctx.db
+    .query("activityMember")
+    .withIndex("by_activity_user", (q) => q.eq("activityId", activityId))
+    .collect();
+
+  const requests = await ctx.db
+    .query("activityRequest")
+    .withIndex("by_activity_user", (q) => q.eq("activityId", activityId))
+    .collect();
+
+  const invites = await ctx.db
+    .query("activityInvite")
+    .withIndex("by_activity_to", (q) => q.eq("activityId", activityId))
+    .collect();
+
+  const messages = await ctx.db
+    .query("activityMessage")
+    .withIndex("by_activity_user", (q) => q.eq("activityId", activityId))
+    .collect();
+
+  await Promise.all([
+    ...members.map((m) => ctx.db.delete(m._id)),
+    ...requests.map((r) => ctx.db.delete(r._id)),
+    ...invites.map((i) => ctx.db.delete(i._id)),
+    ...messages.map((m) => ctx.db.delete(m._id)),
+  ]);
+
+  await ctx.db.delete(activityId);
+};
 
 export const createActivity = mutation({
   args: {
@@ -13,7 +54,7 @@ export const createActivity = mutation({
     ),
     locationDetails: v.optional(v.string()),
     time: v.optional(v.number()),
-    maxSize: v.number(),
+    maxSize: v.optional(v.number()),
     byApproval: v.boolean(),
     expirationTime: v.number(),
   },
@@ -40,12 +81,32 @@ export const createActivity = mutation({
       expirationTime: args.expirationTime,
     });
 
+    await ctx.scheduler.runAt(
+      args.expirationTime,
+      internal.activity.expireActivity,
+      { activityId },
+    );
+
     await ctx.db.insert("activityMember", {
       activityId,
       userId: currentUser._id,
     });
 
     return activityId;
+  },
+});
+
+export const expireActivity = internalMutation({
+  args: {
+    activityId: v.id("activity"),
+  },
+  handler: async (ctx, { activityId }) => {
+    const activity = await ctx.db.get(activityId);
+    if (!activity) return;
+
+    if (activity.expirationTime > Date.now()) return;
+
+    await deleteActivityRecords(ctx, activityId);
   },
 });
 
@@ -74,7 +135,9 @@ export const joinActivity = mutation({
       .withIndex("by_activity_user", (q) => q.eq("activityId", activityId))
       .collect();
 
-    if (members.length >= activity.maxSize) return;
+    if (activity.maxSize !== undefined && members.length >= activity.maxSize) {
+      return;
+    }
 
     const existingMember = await ctx.db
       .query("activityMember")
@@ -117,7 +180,9 @@ export const requestJoinActivity = mutation({
       .withIndex("by_activity_user", (q) => q.eq("activityId", activityId))
       .collect();
 
-    if (members.length >= activity.maxSize) return;
+    if (activity.maxSize !== undefined && members.length >= activity.maxSize) {
+      return;
+    }
 
     const existingMember = await ctx.db
       .query("activityMember")
@@ -252,34 +317,7 @@ export const deleteActivity = mutation({
       throw new Error("Not activity creator");
     }
 
-    const members = await ctx.db
-      .query("activityMember")
-      .withIndex("by_activity_user", (q) => q.eq("activityId", activityId))
-      .collect();
-
-    const requests = await ctx.db
-      .query("activityRequest")
-      .withIndex("by_activity_user", (q) => q.eq("activityId", activityId))
-      .collect();
-
-    const invites = await ctx.db
-      .query("activityInvite")
-      .withIndex("by_activity_to", (q) => q.eq("activityId", activityId))
-      .collect();
-
-    const messages = await ctx.db
-      .query("activityMessage")
-      .withIndex("by_activity_user", (q) => q.eq("activityId", activityId))
-      .collect();
-
-    await Promise.all([
-      ...members.map((m) => ctx.db.delete(m._id)),
-      ...requests.map((r) => ctx.db.delete(r._id)),
-      ...invites.map((i) => ctx.db.delete(i._id)),
-      ...messages.map((m) => ctx.db.delete(m._id)),
-    ]);
-
-    await ctx.db.delete(activityId);
+    await deleteActivityRecords(ctx, activityId);
   },
 });
 
@@ -433,7 +471,9 @@ export const acceptActivityInvite = mutation({
       .withIndex("by_activity_user", (q) => q.eq("activityId", activityId))
       .collect();
 
-    if (members.length >= activity.maxSize) return;
+    if (activity.maxSize !== undefined && members.length >= activity.maxSize) {
+      return;
+    }
 
     if (activity.byApproval) {
       await ctx.db.insert("activityRequest", {

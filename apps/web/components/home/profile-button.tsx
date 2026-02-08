@@ -16,7 +16,6 @@ import { UserRound } from "lucide-react";
 import React from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import ProfileDetailsForm from "@/components/home/profile-details-form";
-import { VisuallyHidden } from "radix-ui";
 
 export default function ProfileButton() {
   const { user, isLoaded } = useUser();

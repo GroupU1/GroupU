@@ -1,12 +1,13 @@
 "use client";
 
+import ContentContainer from "@/components/content-container";
 import { dms } from "@/components/dms/dm-data";
 import DmList from "@/components/dms/dm-list";
 import DmMessageHeader from "@/components/dms/dm-message-header";
 import DmMessageInput from "@/components/dms/dm-message-input";
 import DmMessages from "@/components/dms/dm-messages";
 import DmTitleDropdown from "@/components/dms/dm-title-dropdown";
-import Navbar from "@/components/home/navbar";
+import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import {
   InputGroup,
@@ -67,10 +68,7 @@ export default function Page() {
   }, []);
 
   return (
-    <div
-      className="fixed bottom-0 left-0 w-[calc(100vw-8rem)] h-[calc(100vh-2rem)] ml-24 grid grid-cols-3
-                    text-card-foreground rounded-xl border shadow-sm overflow-hidden"
-    >
+    <ContentContainer className="grid grid-cols-3 bg-transparent">
       <div className="col-span-1 border-r bg-card p-4 space-y-2">
         <div className="flex justify-between -mx-2">
           <DmTitleDropdown />
@@ -108,7 +106,7 @@ export default function Page() {
           <DmMessageInput className="w-full mx-auto" />
         </div>
       </div>
-      <Navbar/>
-    </div>
+      <Navbar />
+    </ContentContainer>
   );
 }
