@@ -37,7 +37,7 @@ export default function HomeSearch({ className }: { className?: string }) {
   }, [isMobileOpen]);
 
   return (
-    <div className={cn("w-lvw flex justify-center gap-4", className)}>
+    <div className={className}>
       <div className="md:hidden">
         <div
           ref={wrapperRef}

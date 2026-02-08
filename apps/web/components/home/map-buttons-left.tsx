@@ -6,7 +6,7 @@ import React from "react";
 
 export default function MapButtonsLeft() {
   return (
-    <ButtonGroup className="flex flex-col md:flex-row space-2">
+    <ButtonGroup className="flex flex-col-reverse md:flex-row space-2">
       <ButtonGroup>
         <MapListToggle />
         <VisibilitySwitch />

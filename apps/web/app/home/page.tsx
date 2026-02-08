@@ -1,18 +1,35 @@
 import ContentContainer from "@/components/content-container";
 import AddActivity from "@/components/home/add-activity";
 import HomeSearch from "@/components/home/home-search";
-import MapButtonsLeft from "@/components/home/map-buttons-left";
+import MapListToggle from "@/components/home/map-list-toggle";
+import SetStatus from "@/components/home/set-status";
+import VisibilitySwitch from "@/components/home/visibility-switch";
 import Navbar from "@/components/navbar";
+import { ButtonGroup } from "@/components/ui/button-group";
 import React from "react";
 
 export default function Page() {
   return (
     <ContentContainer>
-      <div className="absolute top-2 left-2 z-10 flex gap-x-2">
-        <MapButtonsLeft />
+      <div className="absolute bottom-2 top-auto left-2 md:bottom-auto md:top-2 z-10 flex gap-x-2">
+        <div className="flex flex-col-reverse md:flex-row space-x-2">
+          <ButtonGroup className="hidden md:block">
+            <MapListToggle />
+            <VisibilitySwitch />
+          </ButtonGroup>
+          <ButtonGroup>
+            <SetStatus />
+          </ButtonGroup>
+        </div>
       </div>
-      <HomeSearch className="absolute top-2 left-1/2 -translate-x-1/2" />
-      <div className="absolute top-2 right-2 flex items-start gap-x-8">
+      <div className="flex flex-col items-end absolute top-2 right-2 md:right-auto md:left-1/2 md:-translate-x-1/2 space-y-2">
+        <HomeSearch />
+        <ButtonGroup orientation="vertical" className="md:hidden">
+          <MapListToggle />
+          <VisibilitySwitch />
+        </ButtonGroup>
+      </div>
+      <div className="absolute bottom-2 top-auto right-2 flex items-start gap-x-8 md:bottom-auto md:top-2">
         <AddActivity />
       </div>
       <Navbar />
