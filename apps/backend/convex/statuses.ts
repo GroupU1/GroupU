@@ -64,3 +64,10 @@ export const getStatus = query({
       .unique();
   },
 });
+
+export const listStatuses = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db.query("statuses").collect();
+  },
+});

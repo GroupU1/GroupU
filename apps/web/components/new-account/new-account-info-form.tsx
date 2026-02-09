@@ -71,7 +71,7 @@ export default function NewAccountInfoForm() {
         <FieldSet>
           <FieldLegend className="text-2xl! font-bold">Welcome to GroupU</FieldLegend>
           <FieldDescription>
-            Get started by entering entering some facts about yourself. All
+            Get started by entering some facts about yourself. All
             information is optional and can be changed later.
           </FieldDescription>
           <FieldGroup>
@@ -101,7 +101,7 @@ export default function NewAccountInfoForm() {
                 id="nickname"
                 name="nickname"
                 type="text"
-                placeholder="Enter an alternative name (optional)"
+                placeholder="Enter an alternative name if you prefer"
               />
             </Field>
             <Field>

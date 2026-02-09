@@ -52,7 +52,7 @@ function getInitials(name: string) {
 }
 
 export default function UsersPublicList({ className }: { className?: string }) {
-  const users = useQuery(api.users.listUsersPublic) as PublicUser[] | undefined;
+  const users = useQuery(api.users.listUsers) as PublicUser[] | undefined;
 
   return (
     <Card className={className}>

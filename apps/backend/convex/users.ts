@@ -50,7 +50,7 @@ export const upsertUser = mutation({
   },
 });
 
-export const listUsersPublic = query({
+export const listUsers = query({
   args: {},
   handler: async (ctx) => {
     const users = await ctx.db.query("users").collect();
