@@ -69,10 +69,12 @@ export default function NewAccountInfoForm() {
     <form className="w-full max-w-120" onSubmit={handleSubmit}>
       <FieldGroup>
         <FieldSet>
-          <FieldLegend className="text-2xl! font-bold">Welcome to GroupU</FieldLegend>
+          <FieldLegend className="text-2xl! font-bold">
+            Welcome to GroupU
+          </FieldLegend>
           <FieldDescription>
-            Get started by entering some facts about yourself. All
-            information is optional and can be changed later.
+            Get started by entering some facts about yourself. All information
+            is optional and can be changed later.
           </FieldDescription>
           <FieldGroup>
             <div className="grid grid-cols-2 gap-4">
