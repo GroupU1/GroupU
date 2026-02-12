@@ -1,11 +1,11 @@
 ## Developer: {Full Name}
 
-Closes #{ISSUE NUMBER}
+Closes #{ISSUE NUMBER HERE}
 
 ### Pull Request Summary
 
 {Describe the purpose of your pull request}
 
-### Optional Screenshots
+### Screenshots/Screencast
 
-{optionally put screenshots if your change has visuals}
+{optionally put screenshots if your changes are visual}
