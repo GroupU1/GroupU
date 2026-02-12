@@ -3,9 +3,10 @@ import { v } from "convex/values";
 
 export const upsertUser = mutation({
   args: {
-    firstName: v.optional(v.string()),
-    lastName: v.optional(v.string()),
+    firstName: v.string(),
+    lastName: v.string(),
     nickname: v.optional(v.string()),
+    pronouns: v.optional(v.string()),
     collegeYear: v.optional(v.string()),
     major: v.optional(v.string()),
     minor: v.optional(v.string()),
@@ -16,6 +17,22 @@ export const upsertUser = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    if (args.firstName.length > 50) {
+      throw new Error("First name must be 50 characters or fewer");
+    }
+
+    if (args.lastName.length > 50) {
+      throw new Error("Last name must be 50 characters or fewer");
+    }
+
+    if (args.nickname && args.nickname.length > 50) {
+      throw new Error("Nickname must be 50 characters or fewer");
+    }
+
+    if (args.pronouns && args.pronouns.length > 30) {
+      throw new Error("Pronouns must be 30 characters or fewer");
+    }
+
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthenticated");
 
@@ -29,6 +46,7 @@ export const upsertUser = mutation({
       firstName: args.firstName,
       lastName: args.lastName,
       nickname: args.nickname,
+      pronouns: args.pronouns,
       collegeYear: args.collegeYear,
       major: args.major,
       minor: args.minor,

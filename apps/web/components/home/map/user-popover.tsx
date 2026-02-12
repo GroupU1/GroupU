@@ -33,9 +33,12 @@ export default function UserPopover({
 }) {
   return (
     <div className="w-80 space-y-4">
-      <div className="w-full flex justify-between">
-        <div className="flex flex-row items-center gap-x-4">
-          <Avatar className="relative size-16 overflow-visible">
+      <div className="w-full flex justify-between min-w-0">
+        <div className="flex flex-row items-center gap-x-4 min-w-0 flex-1">
+          <Avatar
+            className="relative size-16 overflow-visible"
+            // onClick={Open profile}
+          >
             <AvatarFallback>
               <UserRound className="size-6" />
             </AvatarFallback>
@@ -45,16 +48,20 @@ export default function UserPopover({
               </div>
             )} */}
           </Avatar>
-          <div className="flex flex-col gap-y-0.5">
-            <div className="flex items-center">
-              <h2 className="font-semibold">
-                {user.nickname ? user.nickname : user.firstName + " " + user.lastName}
+          <div className="flex flex-col gap-y-0.5 min-w-0">
+            <div className="flex items-center min-w-0">
+              <h2 className={`font-semibold truncate whitespace-nowrap ${user.pronouns ? "max-w-[65%]" : ""}`}>
+                {user.nickname
+                  ? user.nickname
+                  : user.firstName + " " + user.lastName}
               </h2>
-              {user.nickname && (
-                <Dot className="size-4 text-muted-foreground" />
+              {user.pronouns && (
+                <Dot className="size-4 text-muted-foreground shrink-0" />
               )}
-              {user.nickname && (
-                <p className="text-sm text-muted-foreground">he/him</p>
+              {user.pronouns && (
+                <p className="text-sm text-muted-foreground truncate min-w-0 flex-1">
+                  {user.pronouns}
+                </p>
               )}
             </div>
             {status && (
@@ -72,7 +79,7 @@ export default function UserPopover({
             )}
           </div>
         </div>
-        <div>
+        <div className="shrink-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
