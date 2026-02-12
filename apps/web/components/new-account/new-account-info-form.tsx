@@ -46,11 +46,21 @@ export default function NewAccountInfoForm() {
       return trimmed.length > 0 ? trimmed : undefined;
     };
 
+    const firstName = getValue("firstName");
+    const lastName = getValue("lastName");
+
+    if (!firstName || !lastName) {
+      setError("First and last name are required.");
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       await upsertUser({
-        firstName: getValue("firstName"),
-        lastName: getValue("lastName"),
+        firstName,
+        lastName,
         nickname: getValue("nickname"),
+        pronouns: getValue("pronouns"),
         collegeYear: getValue("collegeYear"),
         major: getValue("major"),
         minor: getValue("minor"),
@@ -73,39 +83,61 @@ export default function NewAccountInfoForm() {
             Welcome to GroupU
           </FieldLegend>
           <FieldDescription>
-            Get started by entering some facts about yourself. All information
-            is optional and can be changed later.
+            Get started by entering some facts about yourself. Only{" "}
+            <span className="text-red-500 font-bold">*</span> fields are
+            required. Most information is optional and all information can be changed later.
           </FieldDescription>
           <FieldGroup>
             <div className="grid grid-cols-2 gap-4">
               <Field>
-                <FieldLabel htmlFor="first-name">First Name</FieldLabel>
+                <FieldLabel htmlFor="first-name">
+                  First Name<span className="text-red-500 font-bold">*</span>
+                </FieldLabel>
                 <Input
                   id="first-name"
                   name="firstName"
                   type="text"
                   placeholder="Enter your first name"
+                  maxLength={50}
+                  required
                 />
               </Field>
               <Field>
-                <FieldLabel htmlFor="last-name">Last Name</FieldLabel>
+                <FieldLabel htmlFor="last-name">
+                  Last Name<span className="text-red-500 font-bold">*</span>
+                </FieldLabel>
                 <Input
                   id="last-name"
                   name="lastName"
                   type="text"
                   placeholder="Enter your last name"
+                  maxLength={50}
+                  required
                 />
               </Field>
             </div>
-            <Field>
-              <FieldLabel htmlFor="nickname">Nickname</FieldLabel>
-              <Input
-                id="nickname"
-                name="nickname"
-                type="text"
-                placeholder="Enter an alternative name if you prefer"
-              />
-            </Field>
+            <div className="grid grid-cols-2 gap-4">
+              <Field>
+                <FieldLabel htmlFor="nickname">Nickname</FieldLabel>
+                <Input
+                  id="nickname"
+                  name="nickname"
+                  type="text"
+                  placeholder="Optional preferred name"
+                  maxLength={50}
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="pronouns">Pronouns</FieldLabel>
+                <Input
+                  id="pronouns"
+                  name="pronouns"
+                  type="text"
+                  placeholder="e.g. she/her"
+                  maxLength={30}
+                />
+              </Field>
+            </div>
             <Field>
               <FieldLabel htmlFor="year">College Year</FieldLabel>
               <Select value={collegeYear} onValueChange={setCollegeYear}>
