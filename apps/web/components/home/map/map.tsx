@@ -6,6 +6,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../backend/convex/_generated/api";
 import UserMapMarker from "@/components/home/map/user-map-marker";
 import ActivityMapMarker from "@/components/home/map/activity-map-marker";
+import UserPopover from "@/components/home/map/user-popover";
 
 export default function Map({ className }: { className?: string }) {
   const users = useQuery(api.users.listUsers);
@@ -31,7 +32,8 @@ export default function Map({ className }: { className?: string }) {
         return (
           <UserMapMarker
             key={user._id}
-            status={status?.text}
+            user={user}
+            status={status}
             ariaLabel={`User ${user.nickname ?? user.firstName ?? ""}`}
           />
         );
