@@ -5,9 +5,10 @@ export default defineSchema({
   users: defineTable({
     //add pronouns, hobbies, profile picture url
     authId: v.string(),
-    firstName: v.optional(v.string()),
-    lastName: v.optional(v.string()),
+    firstName: v.string(),
+    lastName: v.string(),
     nickname: v.optional(v.string()),
+    pronouns: v.optional(v.string()),
     collegeYear: v.optional(v.string()),
     major: v.optional(v.string()),
     minor: v.optional(v.string()),
