@@ -3,7 +3,7 @@ import { v } from "convex/values";
 
 export default defineSchema({
   users: defineTable({
-    //add pronouns, hobbies, profile picture url
+    //add, hobbies, profile picture url??
     authId: v.string(),
     firstName: v.string(),
     lastName: v.string(),
@@ -58,6 +58,10 @@ export default defineSchema({
     restrictedUserId: v.id("users"),
   }).index("by_from_restricted", ["fromUserId", "restrictedUserId"]),
 
+  topic: defineTable({
+    name: v.string(),
+  }),
+
   activity: defineTable({
     creatorId: v.id("users"),
     title: v.string(),
@@ -74,7 +78,6 @@ export default defineSchema({
   }),
 
   activityMember: defineTable({
-    // delete related entries on activity deletion
     activityId: v.id("activity"),
     userId: v.id("users"),
   })
@@ -82,13 +85,11 @@ export default defineSchema({
     .index("by_user", ["userId"]),
 
   activityRequest: defineTable({
-    // delete related entries on activity deletion
     activityId: v.id("activity"),
     userId: v.id("users"),
   }).index("by_activity_user", ["activityId", "userId"]),
 
   activityInvite: defineTable({
-    // delete related entries on activity deletion
     activityId: v.id("activity"),
     fromUserId: v.id("users"),
     toUserId: v.id("users"),
@@ -97,7 +98,6 @@ export default defineSchema({
     .index("by_to", ["toUserId"]),
 
   activityMessage: defineTable({
-    // delete related entries on activity deletion
     activityId: v.id("activity"),
     userId: v.id("users"),
     text: v.string(),
@@ -106,6 +106,11 @@ export default defineSchema({
   })
     .index("by_activity_user", ["activityId", "userId"])
     .index("by_activity_time", ["activityId", "timestamp"]),
+
+  activityTopic: defineTable({
+    activityId: v.id("activity"),
+    topicId: v.id("topic"),
+  }).index("by_activity_topic", ["activityId", "topicId"]),
 
   //possibly add activityDeniedUser table
 
