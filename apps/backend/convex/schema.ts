@@ -60,7 +60,7 @@ export default defineSchema({
 
   topic: defineTable({
     name: v.string(),
-  }),
+  }).index("by_name", ["name"]),
 
   activity: defineTable({
     creatorId: v.id("users"),

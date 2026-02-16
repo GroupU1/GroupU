@@ -1,11 +1,11 @@
 import { v } from "convex/values";
 import { internalMutation, mutation } from "./_generated/server";
 
-export const createTopic = mutation({
+export const createTopics = mutation({
   args: {
-    name: v.string(),
+    names: v.array(v.string()),
   },
-  handler: async (ctx, { name }) => {
+  handler: async (ctx, { names }) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthenticated");
 
@@ -16,11 +16,32 @@ export const createTopic = mutation({
 
     if (!currentUser) throw new Error("User not found");
 
-    const topicId = await ctx.db.insert("topic", {
-      name,
-    });
+    const trimmedNames = Array.from(
+      new Set(names.map((name) => name.trim()).filter(Boolean)),
+    );
 
-    return topicId;
+    if (!trimmedNames.length) {
+      throw new Error("At least one valid topic name is required");
+    }
+
+    const topicIds = [];
+
+    for (const name of trimmedNames) {
+      const existingTopic = await ctx.db
+        .query("topic")
+        .withIndex("by_name", (q) => q.eq("name", name))
+        .first();
+
+      if (existingTopic) {
+        topicIds.push(existingTopic._id);
+        continue;
+      }
+
+      const topicId = await ctx.db.insert("topic", { name });
+      topicIds.push(topicId);
+    }
+
+    return topicIds;
   },
 });
 

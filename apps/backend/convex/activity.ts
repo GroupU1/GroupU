@@ -34,7 +34,7 @@ const deleteActivityRecords = async (
 
   const topics = await ctx.db
     .query("activityTopic")
-    .withIndex("by_activity", (q) => q.eq("activityId", activityId))
+    .withIndex("by_activity_topic", (q) => q.eq("activityId", activityId))
     .collect();
 
   await Promise.all([
