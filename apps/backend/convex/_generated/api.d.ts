@@ -15,6 +15,7 @@ import type * as friends from "../friends.js";
 import type * as ratelimiter from "../ratelimiter.js";
 import type * as restrictedUser from "../restrictedUser.js";
 import type * as statuses from "../statuses.js";
+import type * as topic from "../topic.js";
 import type * as users from "../users.js";
 
 import type {
@@ -31,6 +32,7 @@ declare const fullApi: ApiFromModules<{
   ratelimiter: typeof ratelimiter;
   restrictedUser: typeof restrictedUser;
   statuses: typeof statuses;
+  topic: typeof topic;
   users: typeof users;
 }>;
 

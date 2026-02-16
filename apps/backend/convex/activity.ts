@@ -32,11 +32,17 @@ const deleteActivityRecords = async (
     .withIndex("by_activity_user", (q) => q.eq("activityId", activityId))
     .collect();
 
+  const topics = await ctx.db
+    .query("activityTopic")
+    .withIndex("by_activity_topic", (q) => q.eq("activityId", activityId))
+    .collect();
+
   await Promise.all([
     ...members.map((m) => ctx.db.delete(m._id)),
     ...requests.map((r) => ctx.db.delete(r._id)),
     ...invites.map((i) => ctx.db.delete(i._id)),
     ...messages.map((m) => ctx.db.delete(m._id)),
+    ...topics.map((t) => ctx.db.delete(t._id)),
   ]);
 
   await ctx.db.delete(activityId);
@@ -57,6 +63,7 @@ export const createActivity = mutation({
     maxSize: v.optional(v.number()),
     byApproval: v.boolean(),
     expirationTime: v.number(),
+    activityTopics: v.optional(v.array(v.id("topic"))),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -81,6 +88,15 @@ export const createActivity = mutation({
       expirationTime: args.expirationTime,
     });
 
+    if (args.activityTopics) {
+      for (const topicId of args.activityTopics) {
+        await ctx.db.insert("activityTopic", {
+          activityId,
+          topicId,
+        });
+      }
+    }
+
     await ctx.scheduler.runAt(
       args.expirationTime,
       internal.activity.expireActivity,
@@ -93,6 +109,84 @@ export const createActivity = mutation({
     });
 
     return activityId;
+  },
+});
+
+export const addActivityTopic = mutation({
+  args: {
+    activityId: v.id("activity"),
+    topicId: v.id("topic"),
+  },
+  handler: async (ctx, { activityId, topicId }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_auth", (q) => q.eq("authId", identity.subject))
+      .unique();
+
+    if (!currentUser) throw new Error("User not found");
+
+    const activity = await ctx.db.get(activityId);
+    if (!activity) throw new Error("Activity not found");
+
+    if (activity.creatorId !== currentUser._id) {
+      throw new Error("Not activity creator");
+    }
+
+    const topic = await ctx.db.get(topicId);
+    if (!topic) throw new Error("Topic not found");
+
+    const existingTopic = await ctx.db
+      .query("activityTopic")
+      .withIndex("by_activity_topic", (q) =>
+        q.eq("activityId", activityId).eq("topicId", topicId),
+      )
+      .first();
+
+    if (existingTopic) return existingTopic._id;
+
+    return await ctx.db.insert("activityTopic", {
+      activityId,
+      topicId,
+    });
+  },
+});
+
+export const removeActivityTopic = mutation({
+  args: {
+    activityId: v.id("activity"),
+    topicId: v.id("topic"),
+  },
+  handler: async (ctx, { activityId, topicId }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_auth", (q) => q.eq("authId", identity.subject))
+      .unique();
+
+    if (!currentUser) throw new Error("User not found");
+
+    const activity = await ctx.db.get(activityId);
+    if (!activity) throw new Error("Activity not found");
+
+    if (activity.creatorId !== currentUser._id) {
+      throw new Error("Not activity creator");
+    }
+
+    const existingTopic = await ctx.db
+      .query("activityTopic")
+      .withIndex("by_activity_topic", (q) =>
+        q.eq("activityId", activityId).eq("topicId", topicId),
+      )
+      .first();
+
+    if (!existingTopic) return;
+
+    await ctx.db.delete(existingTopic._id);
   },
 });
 
