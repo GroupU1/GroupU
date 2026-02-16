@@ -13,7 +13,7 @@ _A clear and concise description of what the problem is. Provide context. Ex. I'
 ### Notes
 _[additional considerations]_
 - [ ] Make sure to run `git pull` before any development work
-- [ ] Complete your development in a new branch
+- [ ] Complete your development in a new branch (branch name: {issue #}/abbreviated-topic-name)
 - [ ] Link this issue to your PR
 - [ ] Feel free to reach out if you have any questions!
 
