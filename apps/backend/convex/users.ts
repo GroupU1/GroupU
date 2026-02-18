@@ -76,65 +76,6 @@ export const listUsers = query({
   },
 });
 
-export const listVisibleUsers = query({
-  args: {},
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) return [];
-
-    const currentUser = await ctx.db
-      .query("users")
-      .withIndex("by_auth", (q) => q.eq("authId", identity.subject))
-      .unique();
-    if (!currentUser) return [];
-
-    const [outgoingFriends, incomingFriends, bans, restrictions, candidateUsers] =
-      await Promise.all([
-        ctx.db
-          .query("friends")
-          .withIndex("by_from", (q) => q.eq("fromUserId", currentUser._id))
-          .collect(),
-        ctx.db
-          .query("friends")
-          .withIndex("by_to", (q) => q.eq("toUserId", currentUser._id))
-          .collect(),
-        ctx.db.query("banned").collect(),
-        ctx.db.query("restrictedUser").collect(),
-        ctx.db
-          .query("users")
-          .filter((q) => q.neq(q.field("visibility"), "private"))
-          .collect(),
-      ]);
-
-    const friendIds = new Set([
-      ...outgoingFriends.map((f) => f.toUserId),
-      ...incomingFriends.map((f) => f.fromUserId),
-    ]);
-
-    const blockedByOtherUserIds = new Set(
-      bans
-        .filter((b) => b.bannedUserId === currentUser._id)
-        .map((b) => b.fromUserId),
-    );
-
-    const restrictedByOtherUserIds = new Set(
-      restrictions
-        .filter((r) => r.restrictedUserId === currentUser._id)
-        .map((r) => r.fromUserId),
-    );
-
-    return candidateUsers
-      .filter((user) => user._id !== currentUser._id)
-      .filter((user) => {
-        if (blockedByOtherUserIds.has(user._id)) return false;
-        if (restrictedByOtherUserIds.has(user._id)) return false;
-        if (user.visibility === "friends" && !friendIds.has(user._id)) return false;
-        return true;
-      })
-      .map(({ authId, ...rest }) => rest);
-  },
-});
-
 export const getCurrentUser = query({
   args: {},
   handler: async (ctx) => {
