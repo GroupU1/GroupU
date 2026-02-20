@@ -129,19 +129,12 @@ export const listVisibleUsers = query({
         .map((r) => r.fromUserId),
     );
 
-    const restrictedByCurrentUserIds = new Set(
-      restrictions
-        .filter((r) => r.fromUserId === currentUser._id)
-        .map((r) => r.restrictedUserId),
-    );
-
     return candidateUsers
       .filter((user) => user._id !== currentUser._id)
       .filter((user) => {
         if (blockedByOtherUserIds.has(user._id)) return false;
         if (blockedByCurrentUserIds.has(user._id)) return false;
         if (restrictedByOtherUserIds.has(user._id)) return false;
-        if (restrictedByCurrentUserIds.has(user._id)) return false;
         if (user.visibility === "friends" && !friendIds.has(user._id)) return false;
         return true;
       })
