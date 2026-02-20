@@ -117,6 +117,12 @@ export const listVisibleUsers = query({
         .map((b) => b.fromUserId),
     );
 
+    const blockedByCurrentUserIds = new Set(
+      bans
+        .filter((b) => b.fromUserId === currentUser._id)
+        .map((b) => b.bannedUserId),
+    );
+
     const restrictedByOtherUserIds = new Set(
       restrictions
         .filter((r) => r.restrictedUserId === currentUser._id)
@@ -127,6 +133,7 @@ export const listVisibleUsers = query({
       .filter((user) => user._id !== currentUser._id)
       .filter((user) => {
         if (blockedByOtherUserIds.has(user._id)) return false;
+        if (blockedByCurrentUserIds.has(user._id)) return false;
         if (restrictedByOtherUserIds.has(user._id)) return false;
         if (user.visibility === "friends" && !friendIds.has(user._id)) return false;
         return true;
