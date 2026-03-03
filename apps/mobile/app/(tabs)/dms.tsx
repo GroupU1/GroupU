@@ -1,4 +1,4 @@
-import { DraggableTabCard } from "@/components/ui/draggable-tab-card";
+import { DraggableTabCard } from "@/components/draggable-tab-card";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 

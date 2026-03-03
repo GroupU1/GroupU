@@ -1,9 +1,6 @@
 // apps/mobile/app/_layout.tsx
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import { ThemeProvider } from "@react-navigation/native";
+import { PortalHost } from "@rn-primitives/portal";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "../global.css";
@@ -16,6 +13,7 @@ import * as SecureStore from "expo-secure-store";
 import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
+import { NAV_THEME } from "@/lib/theme";
 
 // Keep your existing settings
 export const unstable_settings = {
@@ -36,7 +34,7 @@ const tokenCache = {
 };
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() ?? "light";
 
   return (
     <ClerkProvider
@@ -44,9 +42,7 @@ export default function RootLayout() {
       tokenCache={tokenCache}
     >
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <ThemeProvider
-          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
+        <ThemeProvider value={NAV_THEME[colorScheme]}>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen
@@ -55,6 +51,7 @@ export default function RootLayout() {
             />
           </Stack>
           <StatusBar style="auto" />
+          <PortalHost />
         </ThemeProvider>
       </ConvexProviderWithClerk>
     </ClerkProvider>
