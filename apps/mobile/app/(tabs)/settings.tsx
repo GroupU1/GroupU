@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export default function HomeScreen() {
+export default function SettingsScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home</Text>
-      <Text>Simple Expo Router tabs app.</Text>
+      <Text style={styles.title}>Settings</Text>
+      <Text>Add your settings here.</Text>
     </View>
   );
 }
