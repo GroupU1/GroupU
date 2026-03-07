@@ -1,36 +1,41 @@
 {
-  "name": "mobile",
-  "private": true,
-  "version": "1.0.0",
-  "main": "expo-router/entry",
-  "scripts": {
-    "start": "expo start",
-    "dev-client": "expo start --dev-client",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
-  },
-  "dependencies": {
-    "expo": "^54.0.0",
-    "expo-constants": "~18.0.13",
-    "expo-linking": "~8.0.11",
-    "expo-router": "~6.0.23",
-    "expo-status-bar": "~3.0.9",
-    "nativewind": "^4.2.2",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-native": "0.81.5",
-    "react-native-css-interop": "0.2.2",
-    "react-native-reanimated": "^4.2.2",
-    "react-native-safe-area-context": "~5.6.2",
-    "react-native-screens": "~4.16.0",
-    "react-native-web": "~0.21.0"
-  },
-  "devDependencies": {
-    "@types/react": "~19.1.10",
-    "babel-preset-expo": "^55.0.10",
-    "prettier-plugin-tailwindcss": "0.5.11",
-    "tailwindcss": "3.4.17",
-    "typescript": "~5.9.2"
-  }
+    "name": "mobile",
+    "version": "1.0.0",
+    "private": true,
+    "main": "expo-router/entry",
+    "scripts": {
+        "dev": "expo start -c",
+        "android": "expo start -c --android",
+        "ios": "expo start -c --ios",
+        "web": "expo start -c --web"
+    },
+    "dependencies": {
+        "@clerk/clerk-expo": "2.16.1",
+        "convex": "1.31.7",
+        "expo": "~54.0.29",
+        "expo-auth-session": "~7.0.10",
+        "expo-constants": "~18.0.13",
+        "expo-crypto": "~15.0.8",
+        "expo-linking": "~8.0.11",
+        "expo-router": "~6.0.23",
+        "expo-secure-store": "~15.0.8",
+        "expo-status-bar": "~3.0.9",
+        "expo-web-browser": "~15.0.10",
+        "nativewind": "4.2.1",
+        "react": "19.1.0",
+        "react-dom": "19.1.0",
+        "react-native": "0.81.5",
+        "react-native-css-interop": "0.2.1",
+        "react-native-reanimated": "~4.1.1",
+        "react-native-safe-area-context": "~5.6.0",
+        "react-native-screens": "~4.16.0",
+        "react-native-web": "0.21.0"
+    },
+    "devDependencies": {
+        "@babel/core": "7.26.0",
+        "@types/react": "~19.1.10",
+        "prettier-plugin-tailwindcss": "0.6.14",
+        "tailwindcss": "3.4.17",
+        "typescript": "5.9.2"
+    }
 }

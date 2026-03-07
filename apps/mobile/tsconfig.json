@@ -4,9 +4,8 @@
     "strict": true
   },
   "include": [
-    "nativewind-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.d.ts"
+    "nativewind-env.d.ts"
   ]
 }

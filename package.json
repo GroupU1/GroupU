@@ -1,31 +1,31 @@
 {
-  "name": "my-turborepo",
-  "private": true,
-  "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "dev:web": "pnpm --filter web dev",
-    "dev:mobile": "pnpm --filter mobile start",
-    "dev:backend": "pnpm --filter backend dev",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
-  },
-  "devDependencies": {
-    "prettier": "^3.7.4",
-    "turbo": "^2.8.1",
-    "typescript": "5.9.2"
-  },
-  "packageManager": "pnpm@9.0.0",
-  "engines": {
-    "node": ">=18"
-  },
-  "pnpm": {
-    "overrides": {
-      "caniuse-lite": "1.0.30001767"
-    }
-  },
-  "dependencies": {
-    "async-limiter": "~1.0.1"
-  }
+    "name":  "my-turborepo",
+    "private":  true,
+    "scripts":  {
+                    "build":  "turbo run build",
+                    "dev":  "turbo run dev",
+                    "dev:web":  "pnpm --filter web dev",
+                    "dev:mobile":  "pnpm --filter mobile dev",
+                    "dev:backend":  "pnpm --filter backend dev",
+                    "lint":  "turbo run lint",
+                    "format":  "prettier --write \"**/*.{ts,tsx,md}\"",
+                    "check-types":  "turbo run check-types"
+                },
+    "devDependencies":  {
+                            "prettier":  "^3.7.4",
+                            "turbo":  "^2.8.1",
+                            "typescript":  "5.9.2"
+                        },
+    "packageManager":  "pnpm@9.0.0",
+    "engines":  {
+                    "node":  "\u003e=18"
+                },
+    "pnpm":  {
+                 "overrides":  {
+                                   "caniuse-lite":  "1.0.30001767"
+                               }
+             },
+    "dependencies":  {
+                         "async-limiter":  "~1.0.1"
+                     }
 }

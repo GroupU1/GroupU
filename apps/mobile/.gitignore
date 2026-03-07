@@ -1,0 +1,7 @@
+# Expo generated files
+.expo
+expo-env.d.ts
+
+# Local verification logs
+expo-*.log
+expo-*.err

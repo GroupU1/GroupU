@@ -75,9 +75,15 @@ export default function ProfileDetailsForm() {
       return trimmed.length ? trimmed : undefined;
     };
 
+    const firstName = readValue("firstName");
+    const lastName = readValue("lastName");
+    if (!firstName || !lastName) {
+      return;
+    }
+
     await upsertUser({
-      firstName: readValue("firstName"),
-      lastName: readValue("lastName"),
+      firstName,
+      lastName,
       nickname: readValue("nickname"),
       collegeYear: readValue("collegeYear"),
       major: readValue("major"),
@@ -276,3 +282,4 @@ export default function ProfileDetailsForm() {
     </Card>
   );
 }
+
