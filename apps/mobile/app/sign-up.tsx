@@ -1,4 +1,4 @@
-import { useAuth, useSignIn, useSSO } from '@clerk/clerk-expo';
+import { useAuth, useSignUp, useSSO } from '@clerk/clerk-expo';
 import * as Linking from 'expo-linking';
 import { Redirect, useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -12,13 +12,12 @@ import {
   AuthNotice,
   AuthScreen,
   AuthSocialButton,
-  AuthTextLink,
 } from '../components/auth/auth-ui';
-import { activateSession, formatClerkError, useWarmUpBrowser } from '../lib/clerk-auth';
+import { formatClerkError, useWarmUpBrowser } from '../lib/clerk-auth';
 
-export default function SignInScreen() {
+export default function SignUpScreen() {
   const { isLoaded: authLoaded, isSignedIn } = useAuth();
-  const { isLoaded, signIn, setActive } = useSignIn();
+  const { isLoaded, signUp } = useSignUp();
   const { startSSOFlow } = useSSO();
   const router = useRouter();
   const [emailAddress, setEmailAddress] = useState('');
@@ -29,7 +28,7 @@ export default function SignInScreen() {
 
   useWarmUpBrowser();
 
-  if (!authLoaded || !isLoaded || !signIn || !setActive) {
+  if (!authLoaded || !isLoaded || !signUp) {
     return <AuthLoadingScreen />;
   }
 
@@ -37,27 +36,28 @@ export default function SignInScreen() {
     return <Redirect href="/home" />;
   }
 
-  const signInResource = signIn;
-  const activate = setActive;
+  const signUpResource = signUp;
 
-  async function onSignInPress() {
+  async function onSignUpPress() {
     setSubmitting(true);
     setError(null);
 
     try {
-      await signInResource.create({ identifier: emailAddress.trim() });
-      const result = await signInResource.attemptFirstFactor({
-        strategy: 'password',
+      await signUpResource.create({
+        emailAddress: emailAddress.trim(),
         password,
       });
 
-      if (await activateSession(result.createdSessionId, activate, router)) {
-        return;
-      }
+      await signUpResource.prepareEmailAddressVerification({
+        strategy: 'email_code',
+      });
 
-      setError('This account needs an additional sign-in step that is not part of this password screen.');
+      router.push({
+        pathname: '/verify-email',
+        params: { email: emailAddress.trim() },
+      });
     } catch (err) {
-      setError(formatClerkError(err, 'Unable to sign in.'));
+      setError(formatClerkError(err, 'Unable to create your account.'));
     } finally {
       setSubmitting(false);
     }
@@ -81,10 +81,10 @@ export default function SignInScreen() {
       }
 
       setError(
-        'Google sign-in did not complete. Make sure the Google connection and the mobile redirect URL are allowed in Clerk.',
+        'Google sign-up did not complete. Make sure the Google connection and the mobile redirect URL are allowed in Clerk.',
       );
     } catch (err) {
-      setError(formatClerkError(err, 'Unable to sign in with Google.'));
+      setError(formatClerkError(err, 'Unable to sign up with Google.'));
     } finally {
       setSocialSubmitting(false);
     }
@@ -92,8 +92,8 @@ export default function SignInScreen() {
 
   return (
     <AuthScreen
-      title="Sign in"
-      subtitle="Use your email and password to continue, or choose Google if you prefer a social sign-in.">
+      title="Create account"
+      subtitle="Start with email and password, then confirm your email with a verification code from Clerk.">
       <AuthInput
         label="Email"
         autoCapitalize="none"
@@ -106,18 +106,16 @@ export default function SignInScreen() {
       <AuthInput
         label="Password"
         autoCapitalize="none"
-        autoComplete="password"
+        autoComplete="new-password"
         onChangeText={setPassword}
-        placeholder="Enter your password"
+        placeholder="Create a password"
         secureTextEntry
         value={password}
       />
 
-      <AuthTextLink label="Forgot password?" onPress={() => router.push('/forgot-password')} />
-
       {error ? <AuthNotice message={error} /> : null}
 
-      <AuthButton label="Continue" loading={submitting} onPress={onSignInPress} />
+      <AuthButton label="Continue" loading={submitting} onPress={onSignUpPress} />
 
       <AuthDivider />
       <AuthSocialButton
@@ -127,9 +125,9 @@ export default function SignInScreen() {
       />
 
       <AuthFooterLink
-        prompt="Don't have an account?"
-        actionLabel="Sign up"
-        onPress={() => router.push('/sign-up')}
+        prompt="Already have an account?"
+        actionLabel="Sign in"
+        onPress={() => router.navigate('/sign-in')}
       />
     </AuthScreen>
   );
