@@ -1,6 +1,11 @@
 import type { ReactNode } from 'react';
-import { Pressable, ScrollView, Text, TextInput, type TextInputProps, View } from 'react-native';
+import { Pressable, ScrollView, Text, type TextInputProps, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Separator } from '../ui/separator';
 
 type AuthScreenProps = {
   title: string;
@@ -39,9 +44,12 @@ export function AuthScreen({ title, subtitle, children }: AuthScreenProps) {
         contentContainerClassName="flex-grow justify-center px-6 py-10"
         keyboardShouldPersistTaps="handled">
         <View className="rounded-3xl border border-border bg-card p-6">
-          <Text className="mb-2 text-xs font-semibold uppercase tracking-[3px] text-muted-foreground">
+          <Badge
+            variant="outline"
+            className="mb-3"
+            textClassName="font-semibold uppercase tracking-[2px] text-muted-foreground">
             GroupU
-          </Text>
+          </Badge>
           <Text className="text-3xl font-semibold text-card-foreground">{title}</Text>
           <Text className="mt-2 text-base leading-6 text-muted-foreground">{subtitle}</Text>
           <View className="mt-8 gap-4">{children}</View>
@@ -55,11 +63,7 @@ export function AuthInput({ label, ...props }: AuthInputProps) {
   return (
     <View className="gap-2">
       <Text className="text-sm font-medium text-foreground">{label}</Text>
-      <TextInput
-        placeholderTextColor="hsl(0 0% 40%)"
-        className="min-h-14 rounded-2xl border border-input bg-background px-4 text-base text-foreground"
-        {...props}
-      />
+      <Input {...props} />
     </View>
   );
 }
@@ -71,28 +75,22 @@ export function AuthButton({
   loading = false,
   variant = 'primary',
 }: AuthButtonProps) {
-  const primary = variant === 'primary';
-
   return (
-    <Pressable
+    <Button
       onPress={onPress}
       disabled={disabled || loading}
-      className={`min-h-14 items-center justify-center rounded-2xl px-4 ${
-        primary ? 'bg-primary' : 'border border-border bg-secondary'
-      }`}>
-      <Text className={`text-base font-medium ${primary ? 'text-primary-foreground' : 'text-secondary-foreground'}`}>
-        {loading ? 'Working...' : label}
-      </Text>
-    </Pressable>
+      variant={variant === 'primary' ? 'primary' : 'secondary'}>
+      {loading ? 'Working...' : label}
+    </Button>
   );
 }
 
 export function AuthDivider({ label = 'or continue with' }: { label?: string }) {
   return (
     <View className="flex-row items-center gap-3 py-1">
-      <View className="h-px flex-1 bg-border" />
+      <Separator className="flex-1" />
       <Text className="text-xs uppercase tracking-[2px] text-muted-foreground">{label}</Text>
-      <View className="h-px flex-1 bg-border" />
+      <Separator className="flex-1" />
     </View>
   );
 }
@@ -104,14 +102,9 @@ export function AuthSocialButton({
   loading = false,
 }: AuthButtonProps) {
   return (
-    <Pressable
-      onPress={onPress}
-      disabled={disabled || loading}
-      className="min-h-14 items-center justify-center rounded-2xl border border-border bg-secondary px-4">
-      <Text className="text-base font-medium text-secondary-foreground">
-        {loading ? 'Working...' : label}
-      </Text>
-    </Pressable>
+    <Button onPress={onPress} disabled={disabled || loading} variant="outline">
+      {loading ? 'Working...' : label}
+    </Button>
   );
 }
 

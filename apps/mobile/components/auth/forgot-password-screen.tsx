@@ -9,8 +9,8 @@ import {
   AuthLoadingScreen,
   AuthNotice,
   AuthScreen,
-} from '../components/auth/auth-ui';
-import { formatClerkError } from '../lib/clerk-auth';
+} from './auth-ui';
+import { formatClerkError } from '../../lib/clerk-auth';
 
 export default function ForgotPasswordScreen() {
   const { isLoaded: authLoaded, isSignedIn } = useAuth();
@@ -25,7 +25,7 @@ export default function ForgotPasswordScreen() {
   }
 
   if (isSignedIn) {
-    return <Redirect href="/home" />;
+    return <Redirect href="/(tabs)/map" />;
   }
 
   const signInResource = signIn;
@@ -41,7 +41,7 @@ export default function ForgotPasswordScreen() {
       });
 
       router.push({
-        pathname: '/reset-password',
+        pathname: '/(auth)/reset-password',
         params: { email: emailAddress.trim() },
       });
     } catch (err) {
@@ -72,7 +72,7 @@ export default function ForgotPasswordScreen() {
       <AuthFooterLink
         prompt="Remembered it?"
         actionLabel="Sign in"
-        onPress={() => router.navigate('/sign-in')}
+        onPress={() => router.navigate('/(auth)/sign-in')}
       />
     </AuthScreen>
   );

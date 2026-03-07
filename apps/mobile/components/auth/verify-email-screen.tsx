@@ -10,8 +10,8 @@ import {
   AuthNotice,
   AuthScreen,
   AuthTextLink,
-} from '../components/auth/auth-ui';
-import { activateSession, formatClerkError, getRouteParam } from '../lib/clerk-auth';
+} from './auth-ui';
+import { activateSession, formatClerkError, getRouteParam } from '../../lib/clerk-auth';
 
 export default function VerifyEmailScreen() {
   const { isLoaded: authLoaded, isSignedIn } = useAuth();
@@ -30,7 +30,7 @@ export default function VerifyEmailScreen() {
   }
 
   if (isSignedIn) {
-    return <Redirect href="/home" />;
+    return <Redirect href="/(tabs)/map" />;
   }
 
   const signUpResource = signUp;
@@ -98,11 +98,11 @@ export default function VerifyEmailScreen() {
         variant="secondary"
       />
 
-      <AuthTextLink label="Use a different email" onPress={() => router.replace('/sign-up')} />
+      <AuthTextLink label="Use a different email" onPress={() => router.replace('/(auth)/sign-up')} />
       <AuthFooterLink
         prompt="Already verified?"
         actionLabel="Sign in"
-        onPress={() => router.navigate('/sign-in')}
+        onPress={() => router.navigate('/(auth)/sign-in')}
       />
     </AuthScreen>
   );

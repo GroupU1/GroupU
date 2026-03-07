@@ -17,7 +17,7 @@ type ClerkErrorShape = {
 type SetActiveLike = (params: { session: string }) => Promise<void>;
 
 type RouterLike = {
-  replace: (href: '/home') => void;
+  replace: (href: '/(tabs)/map') => void;
 };
 
 export function useWarmUpBrowser() {
@@ -67,6 +67,6 @@ export async function activateSession(
   }
 
   await setActive({ session: sessionId });
-  router.replace('/home');
+  router.replace('/(tabs)/map');
   return true;
 }

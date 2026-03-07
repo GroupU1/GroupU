@@ -13,8 +13,8 @@ import {
   AuthScreen,
   AuthSocialButton,
   AuthTextLink,
-} from '../components/auth/auth-ui';
-import { activateSession, formatClerkError, useWarmUpBrowser } from '../lib/clerk-auth';
+} from './auth-ui';
+import { activateSession, formatClerkError, useWarmUpBrowser } from '../../lib/clerk-auth';
 
 export default function SignInScreen() {
   const { isLoaded: authLoaded, isSignedIn } = useAuth();
@@ -34,7 +34,7 @@ export default function SignInScreen() {
   }
 
   if (isSignedIn) {
-    return <Redirect href="/home" />;
+    return <Redirect href="/(tabs)/map" />;
   }
 
   const signInResource = signIn;
@@ -76,7 +76,7 @@ export default function SignInScreen() {
 
       if (createdSessionId && setActiveFromSSO) {
         await setActiveFromSSO({ session: createdSessionId });
-        router.replace('/home');
+        router.replace('/(tabs)/map');
         return;
       }
 
@@ -113,7 +113,7 @@ export default function SignInScreen() {
         value={password}
       />
 
-      <AuthTextLink label="Forgot password?" onPress={() => router.push('/forgot-password')} />
+      <AuthTextLink label="Forgot password?" onPress={() => router.push('/(auth)/forgot-password')} />
 
       {error ? <AuthNotice message={error} /> : null}
 
@@ -129,7 +129,7 @@ export default function SignInScreen() {
       <AuthFooterLink
         prompt="Don't have an account?"
         actionLabel="Sign up"
-        onPress={() => router.push('/sign-up')}
+        onPress={() => router.push('/(auth)/sign-up')}
       />
     </AuthScreen>
   );

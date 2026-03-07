@@ -12,8 +12,8 @@ import {
   AuthNotice,
   AuthScreen,
   AuthSocialButton,
-} from '../components/auth/auth-ui';
-import { formatClerkError, useWarmUpBrowser } from '../lib/clerk-auth';
+} from './auth-ui';
+import { formatClerkError, useWarmUpBrowser } from '../../lib/clerk-auth';
 
 export default function SignUpScreen() {
   const { isLoaded: authLoaded, isSignedIn } = useAuth();
@@ -33,7 +33,7 @@ export default function SignUpScreen() {
   }
 
   if (isSignedIn) {
-    return <Redirect href="/home" />;
+    return <Redirect href="/(tabs)/map" />;
   }
 
   const signUpResource = signUp;
@@ -53,7 +53,7 @@ export default function SignUpScreen() {
       });
 
       router.push({
-        pathname: '/verify-email',
+        pathname: '/(auth)/verify-email',
         params: { email: emailAddress.trim() },
       });
     } catch (err) {
@@ -76,7 +76,7 @@ export default function SignUpScreen() {
 
       if (createdSessionId && setActiveFromSSO) {
         await setActiveFromSSO({ session: createdSessionId });
-        router.replace('/home');
+        router.replace('/(tabs)/map');
         return;
       }
 
@@ -127,7 +127,7 @@ export default function SignUpScreen() {
       <AuthFooterLink
         prompt="Already have an account?"
         actionLabel="Sign in"
-        onPress={() => router.navigate('/sign-in')}
+        onPress={() => router.navigate('/(auth)/sign-in')}
       />
     </AuthScreen>
   );

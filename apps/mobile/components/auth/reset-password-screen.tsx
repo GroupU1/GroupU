@@ -9,8 +9,8 @@ import {
   AuthLoadingScreen,
   AuthNotice,
   AuthScreen,
-} from '../components/auth/auth-ui';
-import { activateSession, formatClerkError, getRouteParam } from '../lib/clerk-auth';
+} from './auth-ui';
+import { activateSession, formatClerkError, getRouteParam } from '../../lib/clerk-auth';
 
 export default function ResetPasswordScreen() {
   const { isLoaded: authLoaded, isSignedIn } = useAuth();
@@ -22,7 +22,9 @@ export default function ResetPasswordScreen() {
   const [password, setPassword] = useState('');
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(emailAddress ? `We sent a code to ${emailAddress}.` : null);
+  const [message, setMessage] = useState<string | null>(
+    emailAddress ? `We sent a code to ${emailAddress}.` : null,
+  );
   const [submitting, setSubmitting] = useState(false);
   const [resending, setResending] = useState(false);
 
@@ -48,7 +50,7 @@ export default function ResetPasswordScreen() {
   }
 
   if (isSignedIn) {
-    return <Redirect href="/home" />;
+    return <Redirect href="/(tabs)/map" />;
   }
 
   const signInResource = signIn;
@@ -137,7 +139,7 @@ export default function ResetPasswordScreen() {
       <AuthFooterLink
         prompt="Need to start over?"
         actionLabel="Back to sign in"
-        onPress={() => router.navigate('/sign-in')}
+        onPress={() => router.navigate('/(auth)/sign-in')}
       />
     </AuthScreen>
   );
