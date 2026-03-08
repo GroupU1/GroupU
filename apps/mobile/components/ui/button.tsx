@@ -4,6 +4,7 @@ import { Pressable, Text, type PressableProps } from 'react-native';
 import { cn } from './utils';
 
 const buttonVariants = {
+  default: 'bg-foreground',
   primary: 'bg-primary',
   secondary: 'bg-secondary',
   outline: 'border border-border bg-background',
@@ -12,6 +13,7 @@ const buttonVariants = {
 } as const;
 
 const buttonTextVariants = {
+  default: 'text-background',
   primary: 'text-primary-foreground',
   secondary: 'text-secondary-foreground',
   outline: 'text-foreground',
@@ -30,7 +32,7 @@ type ButtonProps = PressableProps & {
 
 export function Button({
   children,
-  variant = 'primary',
+  variant = 'default',
   className,
   disabled,
   textClassName,
